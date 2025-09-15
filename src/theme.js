@@ -32,6 +32,7 @@ const theme = extendTheme({
           '*::-webkit-scrollbar-thumb': {
             backgroundColor: '#bdc3c7',
             borderRadius: '4px',
+            
           },
           '*::-webkit-scrollbar-thumb:hover': {
             backgroundColor: '#9da1a0ff',
