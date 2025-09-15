@@ -1,16 +1,125 @@
 import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import VpnLockIcon from "@mui/icons-material/VpnLock";
+import AddToDriveIcon from "@mui/icons-material/AddToDrive";
+import BoltIcon from "@mui/icons-material/Bolt";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import Avatar from "@mui/material/Avatar";
+import AvatarGroup from "@mui/material/AvatarGroup";
+import Tooltip from "@mui/material/Tooltip";
+import Button from "@mui/material/Button";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+
+const MENU_STYLES = {
+  color: "primary.main",
+  bgcolor: "white",
+  boder: "none",
+  boderRadius: "4px",
+  "& .MuiSvgIcon-root": { color: "primary.main" },
+  "&:hover": { bgcolor: "primary.50" },
+};
 function BoardBar() {
   return (
     <Box
       sx={{
-        backgroundColor: "primary.dark",
         width: "100%",
         height: (theme) => theme.trello.boardBarHeight,
         display: "flex",
         alignItems: "center",
+        justifyContent: "space-between",
+        paddingX: 2,
+        gap: 1,
+        overflowX: "auto",
+        borderTop: "1px solid #00bfa5",
       }}
     >
-      Board Bar
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        <Chip
+          sx={MENU_STYLES}
+          icon={<DashboardIcon />}
+          label="HuuDuan Board"
+          clickable
+        />
+        <Chip
+          sx={MENU_STYLES}
+          icon={<VpnLockIcon />}
+          label="Public/Private Workspace"
+          clickable
+        />
+        <Chip
+          sx={MENU_STYLES}
+          icon={<AddToDriveIcon />}
+          label="Add To Google Drive"
+          clickable
+        />
+        <Chip
+          sx={MENU_STYLES}
+          icon={<BoltIcon />}
+          label="Automation"
+          clickable
+        />
+        <Chip
+          sx={MENU_STYLES}
+          icon={<FilterListIcon />}
+          label="Filters"
+          clickable
+        />
+      </Box>
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        <Button variant="outlined" startIcon={<PersonAddIcon />}>
+          Invite
+        </Button>
+        <AvatarGroup
+          max={6}
+          sx={{
+            "& .MuiAvatar-root": { width: 32, height: 32, fontSize: 15 },
+          }}
+        >
+          <Tooltip title="huuduan">
+            <Avatar alt="huuduan" src="https://i.imgur.com/0y0y0y0.jpg" />
+          </Tooltip>
+          <Tooltip title="huuduan">
+            <Avatar
+              alt="huuduan"
+              src="https://randomuser.me/api/portraits/men/32.jpg"
+            />
+          </Tooltip>
+          <Tooltip title="huuduan">
+            <Avatar
+              alt="huuduan"
+              src="https://randomuser.me/api/portraits/men/75.jpg"
+            />
+          </Tooltip>
+          <Tooltip title="huuduan">
+            <Avatar
+              alt="huuduan"
+              src="https://randomuser.me/api/portraits/women/44.jpg"
+            />
+          </Tooltip>
+          <Tooltip title="huuduan">
+            <Avatar alt="huuduan" src="https://i.imgur.com/0y0y0y0.jpg" />
+          </Tooltip>
+          <Tooltip title="huuduan">
+            <Avatar
+              alt="huuduan"
+              src="https://randomuser.me/api/portraits/men/32.jpg"
+            />
+          </Tooltip>
+          <Tooltip title="huuduan">
+            <Avatar
+              alt="huuduan"
+              src="https://randomuser.me/api/portraits/men/75.jpg"
+            />
+          </Tooltip>
+          <Tooltip title="huuduan">
+            <Avatar
+              alt="huuduan"
+              src="https://randomuser.me/api/portraits/women/44.jpg"
+            />
+          </Tooltip>
+        </AvatarGroup>
+      </Box>
     </Box>
   );
 }
