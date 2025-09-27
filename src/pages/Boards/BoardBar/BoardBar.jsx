@@ -34,7 +34,6 @@ function BoardBar() {
         "&::-webkit-scrollbar-track": { m: 2 },
         bgcolor: (theme) =>
           theme.palette.mode === "dark" ? "#34495e" : "#1679d2",
-        borderBottom: "1px solid white",
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
