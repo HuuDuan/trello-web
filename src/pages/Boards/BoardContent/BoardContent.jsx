@@ -27,7 +27,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   COLUMN: "ACTIVE_DRAG_ITEM_TYPE_COLUMN",
   CARD: "ACTIVE_DRAG_ITEM_TYPE_CARD",
 };
-function BoardContent({ board, createNewColumn, createNewCard }) {
+function BoardContent({ board, createNewColumn, createNewCard, moveColumns }) {
   // Yếu cầu chuột di chuyển 10px mới kích hoạt event, fix trường hợp click bị gọi event
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: { distance: 10 },
@@ -292,8 +292,8 @@ function BoardContent({ board, createNewColumn, createNewCard }) {
           oldColumnIndex,
           newColumnIndex
         );
-        // const dndOrderedColumnsIds = dndOrderedColumns.map((c) => c._id);
 
+        moveColumns(dndOrderedColumns);
         // Cập nhật lại state columns ban đầu sau khi kéo thả
         setOrderedColumns(dndOrderedColumns);
       }
