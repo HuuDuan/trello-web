@@ -11,19 +11,24 @@ import { useState } from "react";
 import { TextField } from "@mui/material";
 import { toast } from "react-toastify";
 
-function ListColumns({ columns }) {
+function ListColumns({ columns, createNewColumn, createNewCard }) {
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false);
   const toggleOpenNewColumnForm = () =>
     setOpenNewColumnForm(!openNewColumnForm);
 
   const [newColumnTitle, setNewColumnTitle] = useState("");
 
-  const addNewColumn = () => {
+  const addNewColumn = async () => {
     if (!newColumnTitle) {
       toast.error("Please enter column title!");
       return;
     }
-    // GỌi API
+    const newColumnData = {
+      title: newColumnTitle,
+    };
+    // Gọi lên props func createNewColumn nằm ở component cha cao nhất (board/_id.jsx)
+    await createNewColumn(newColumnData);
+
     // Đóng trạng thái thêm column & clear Input
     toggleOpenNewColumnForm();
     setNewColumnTitle("");
@@ -51,7 +56,11 @@ function ListColumns({ columns }) {
         }}
       >
         {columns?.map((column) => (
-          <Column key={column._id} column={column} />
+          <Column
+            key={column._id}
+            column={column}
+            createNewCard={createNewCard}
+          />
         ))}
 
         {/* Box add new column CTA */}
