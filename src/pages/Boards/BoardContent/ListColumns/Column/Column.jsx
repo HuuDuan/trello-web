@@ -17,7 +17,6 @@ import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined
 import AddCardIcon from "@mui/icons-material/AddCard";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
 import ListCards from "./ListCards/ListCards";
-import { mapOrder } from "~/utils/sorts";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import CloseIcon from "@mui/icons-material/Close";
@@ -45,14 +44,14 @@ function Column({ column, createNewCard }) {
     opacity: isDragging ? 0.5 : undefined,
   };
 
-  const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, "_id");
+  const orderedCards = column.cards;
 
   const [openNewCardForm, setOpenNewCardForm] = useState(false);
   const toggleOpenNewCardForm = () => setOpenNewCardForm(!openNewCardForm);
 
   const [newCardTitle, setNewCardTitle] = useState("");
 
-  const addNewCard = async () => {
+  const addNewCard = () => {
     if (!newCardTitle) {
       toast.error("Please enter card title!");
       return;
@@ -62,7 +61,7 @@ function Column({ column, createNewCard }) {
       columnId: column._id,
     };
     // Gọi lên props func createNewCard nằm ở component cha cao nhất (board/_id.jsx)
-    await createNewCard(newCardData);
+    createNewCard(newCardData);
     // Đóng trạng thái thêm Card & clear Input
     toggleOpenNewCardForm();
     setNewCardTitle("");
