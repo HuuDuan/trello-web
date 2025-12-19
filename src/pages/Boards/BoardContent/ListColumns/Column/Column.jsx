@@ -22,8 +22,9 @@ import { CSS } from "@dnd-kit/utilities";
 import CloseIcon from "@mui/icons-material/Close";
 import { TextField } from "@mui/material";
 import { toast } from "react-toastify";
+import { useConfirm } from "material-ui-confirm";
 
-function Column({ column, createNewCard }) {
+function Column({ column, createNewCard, deleteColumnDetails }) {
   const {
     attributes,
     listeners,
@@ -75,6 +76,21 @@ function Column({ column, createNewCard }) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  // Xử lý xóa Column
+  const confirmDeleteColumn = useConfirm();
+  const handleDeleteColumn = () => {
+    confirmDeleteColumn({
+      title: "Delete this column?",
+      description: "This action will permanently delete the column.",
+      confirmationText: "Confirm",
+    })
+      .then(() => {
+        deleteColumnDetails(column._id);
+      })
+      .catch(() => {});
+  };
+
   return (
     <div ref={setNodeRef} style={{ ...dndKitColumnStyle }} {...attributes}>
       <Box
@@ -127,13 +143,22 @@ function Column({ column, createNewCard }) {
               anchorEl={anchorEl}
               open={open}
               onClose={handleClose}
+              onClick={handleClose}
               MenuListProps={{
                 "aria-labelledby": "basic-button-workspaces",
               }}
             >
-              <MenuItem>
+              <MenuItem
+                onClick={toggleOpenNewCardForm}
+                sx={{
+                  "&:hover": {
+                    color: "primary.main",
+                    "& .add-card-icon": { color: "primary.main" },
+                  },
+                }}
+              >
                 <ListItemIcon>
-                  <AddCardIcon fontSize="small" />
+                  <AddCardIcon className="add-card-icon" fontSize="small" />
                 </ListItemIcon>
                 <ListItemText>Add new card</ListItemText>
               </MenuItem>
@@ -156,11 +181,22 @@ function Column({ column, createNewCard }) {
                 <ListItemText>Paste</ListItemText>
               </MenuItem>
               <Divider />
-              <MenuItem>
+              <MenuItem
+                onClick={handleDeleteColumn}
+                sx={{
+                  "&:hover": {
+                    color: "error.dark",
+                    "& .delete-forever-icon": { color: "error.dark" },
+                  },
+                }}
+              >
                 <ListItemIcon>
-                  <DeleteForeverOutlinedIcon fontSize="small" />
+                  <DeleteForeverOutlinedIcon
+                    className="delete-forever-icon"
+                    fontSize="small"
+                  />
                 </ListItemIcon>
-                <ListItemText>Remove this column</ListItemText>
+                <ListItemText>Delete this column</ListItemText>
               </MenuItem>
               <MenuItem>
                 <ListItemIcon>
