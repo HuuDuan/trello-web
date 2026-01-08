@@ -10,20 +10,28 @@ import {
 import { useState } from "react";
 import { TextField } from "@mui/material";
 import { toast } from "react-toastify";
+import { createNewColumnAPI } from "~/apis";
+import { generatePlaceholderCard } from "~/utils/formatters";
+import {
+  updateCurrentActiveBoard,
+  selectCurrentActiveBoard,
+} from "~/redux/activeBoard/activeBoardSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useHorizontalScroll } from "~/customHooks";
 
-function ListColumns({
-  columns,
-  createNewColumn,
-  createNewCard,
-  deleteColumnDetails,
-}) {
+function ListColumns({ columns }) {
+  const dispatch = useDispatch();
+  const board = useSelector(selectCurrentActiveBoard);
+
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false);
   const toggleOpenNewColumnForm = () =>
     setOpenNewColumnForm(!openNewColumnForm);
 
   const [newColumnTitle, setNewColumnTitle] = useState("");
 
-  const addNewColumn = () => {
+  const scrollRef = useHorizontalScroll();
+
+  const addNewColumn = async () => {
     if (!newColumnTitle) {
       toast.error("Please enter column title!");
       return;
@@ -31,8 +39,20 @@ function ListColumns({
     const newColumnData = {
       title: newColumnTitle,
     };
-    // Gọi lên props func createNewColumn nằm ở component cha cao nhất (board/_id.jsx)
-    createNewColumn(newColumnData);
+    // func này có nhiệm vụ gọi APi tạo mới Column và làm lại dữ liệu State Board
+    const createdColumn = await createNewColumnAPI({
+      ...newColumnData,
+      boardId: board._id,
+    });
+    // Thêm placeholder card vào cột mới tạo
+    createdColumn.cards = [generatePlaceholderCard(createdColumn)];
+    createdColumn.cardOrderIds = [generatePlaceholderCard(createdColumn)._id];
+
+    // Cập nhật lại state board
+    const newBoard = cloneDeep(board);
+    newBoard.columns.push(createdColumn);
+    newBoard.columnOrderIds.push(createdColumn._id);
+    dispatch(updateCurrentActiveBoard(newBoard));
 
     // Đóng trạng thái thêm column & clear Input
     toggleOpenNewColumnForm();
@@ -50,6 +70,7 @@ function ListColumns({
       strategy={horizontalListSortingStrategy}
     >
       <Box
+        ref={scrollRef}
         sx={{
           bgcolor: "inherit",
           width: "100%",
@@ -59,14 +80,15 @@ function ListColumns({
           overflowX: "auto",
           "&::-webkit-scrollbar-track": { m: 2 },
         }}
+        // onWheel={(e) => {
+        //   if (!e.shiftKey) {
+        //     e.preventDefault();
+        //     e.currentTarget.scrollLeft += e.deltaY;
+        //   }
+        // }}
       >
         {columns?.map((column) => (
-          <Column
-            key={column._id}
-            column={column}
-            createNewCard={createNewCard}
-            deleteColumnDetails={deleteColumnDetails}
-          />
+          <Column key={column._id} column={column} />
         ))}
 
         {/* Box add new column CTA */}
