@@ -11,6 +11,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Button from "@mui/material/Button";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { capitalizeFirstLetter } from "~/utils/formatters";
+import { useHorizontalScroll } from "~/customHooks";
 
 const MENU_STYLES = {
   color: "white",
@@ -21,8 +22,10 @@ const MENU_STYLES = {
   "&:hover": { bgcolor: "primary.50" },
 };
 function BoardBar({ board }) {
+  const scrollRef = useHorizontalScroll();
   return (
     <Box
+      ref={scrollRef}
       sx={{
         width: "100%",
         height: (theme) => theme.trello.boardBarHeight,

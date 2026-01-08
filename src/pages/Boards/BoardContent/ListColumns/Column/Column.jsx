@@ -23,8 +23,17 @@ import CloseIcon from "@mui/icons-material/Close";
 import { TextField } from "@mui/material";
 import { toast } from "react-toastify";
 import { useConfirm } from "material-ui-confirm";
+import { createNewCardAPI, deleteColumnDetailsAPI } from "~/apis";
+import {
+  updateCurrentActiveBoard,
+  selectCurrentActiveBoard,
+} from "~/redux/activeBoard/activeBoardSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { cloneDeep } from "lodash";
 
-function Column({ column, createNewCard, deleteColumnDetails }) {
+function Column({ column }) {
+  const dispatch = useDispatch();
+  const board = useSelector(selectCurrentActiveBoard);
   const {
     attributes,
     listeners,
@@ -52,7 +61,7 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
 
   const [newCardTitle, setNewCardTitle] = useState("");
 
-  const addNewCard = () => {
+  const addNewCard = async () => {
     if (!newCardTitle) {
       toast.error("Please enter card title!");
       return;
@@ -61,8 +70,30 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
       title: newCardTitle,
       columnId: column._id,
     };
-    // Gọi lên props func createNewCard nằm ở component cha cao nhất (board/_id.jsx)
-    createNewCard(newCardData);
+    // gọi APi tạo mới Card và làm lại dữ liệu State Board
+    const createdCard = await createNewCardAPI({
+      ...newCardData,
+      boardId: board._id,
+    });
+    const newBoard = cloneDeep(board);
+    const columnToUpdate = newBoard.columns.find(
+      (column) => column._id === createdCard.columnId
+    );
+
+    if (columnToUpdate) {
+      // nếu colum rỗng: bản chất là đang chứa một cái placeholder card
+      if (columnToUpdate.cards.some((card) => card.FE_PlaceholderCard)) {
+        columnToUpdate.cards.push(createdCard);
+        columnToUpdate.cardOrderIds.push(createdCard._id);
+      } else {
+        // Column có data thì push vào cuối mảng
+        columnToUpdate.cards.push(createdCard);
+        columnToUpdate.cardOrderIds.push(createdCard._id);
+      }
+    }
+
+    dispatch(updateCurrentActiveBoard(newBoard));
+
     // Đóng trạng thái thêm Card & clear Input
     toggleOpenNewCardForm();
     setNewCardTitle("");
@@ -86,7 +117,18 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
       confirmationText: "Confirm",
     })
       .then(() => {
-        deleteColumnDetails(column._id);
+        // update cho chuẩn dữ liệu
+        const newBoard = { ...board };
+        newBoard.columns = newBoard.columns.filter((c) => c._id !== column._id);
+        newBoard.columnOrderIds = newBoard.columnOrderIds.filter(
+          (_id) => _id !== column._id
+        );
+        dispatch(updateCurrentActiveBoard(newBoard));
+
+        // xử lý api
+        deleteColumnDetailsAPI(column._id).then((res) => {
+          toast.success(res?.deleteResult);
+        });
       })
       .catch(() => {});
   };
