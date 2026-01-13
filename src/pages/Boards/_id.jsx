@@ -17,17 +17,19 @@ import {
   selectCurrentActiveBoard,
 } from "~/redux/activeBoard/activeBoardSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 function Board() {
   const dispatch = useDispatch();
   // const [board, setBoard] = useState(null);
   const board = useSelector(selectCurrentActiveBoard);
 
+  const { boardId } = useParams();
+
   useEffect(() => {
-    const boardId = "693d2ce7dd03fb9193e9f5f8";
     // call API
     dispatch(fetchBoardDetailsAPI(boardId));
-  }, [dispatch]);
+  }, [dispatch, boardId]);
 
   const moveColumns = (dndOrderedColumns) => {
     const dndOrderedColumnsIds = dndOrderedColumns.map((c) => c._id);
