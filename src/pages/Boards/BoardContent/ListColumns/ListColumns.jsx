@@ -18,6 +18,7 @@ import {
 } from "~/redux/activeBoard/activeBoardSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useHorizontalScroll } from "~/customHooks";
+import { cloneDeep } from "lodash";
 
 function ListColumns({ columns }) {
   const dispatch = useDispatch();
@@ -157,6 +158,7 @@ function ListColumns({ columns }) {
             />
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <Button
+                className="interceptor-loading"
                 onClick={addNewColumn}
                 variant="contained"
                 color="success"

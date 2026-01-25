@@ -3,6 +3,7 @@ import Container from "@mui/material/Container";
 import AppBar from "~/components/AppBar/AppBar";
 import BoardBar from "~/pages/Boards/BoardBar/BoardBar";
 import BoardContent from "~/pages/Boards/BoardContent/BoardContent";
+import PageLoadingSpinner from "~/components/Loading/PageLoadingSpinner";
 // import { mockData } from "~/apis/mock-data";
 import {
   updateBoardDetailsAPI,
@@ -10,7 +11,6 @@ import {
   moveCardToDifferentColumnAPI,
 } from "~/apis";
 import { cloneDeep } from "lodash";
-import { Box, CircularProgress, Typography } from "@mui/material";
 import {
   fetchBoardDetailsAPI,
   updateCurrentActiveBoard,
@@ -47,12 +47,12 @@ function Board() {
   const moveCardInTheSameColumn = (
     dndOrderedCards,
     dndOrderedCardIds,
-    columnId
+    columnId,
   ) => {
     // Update cho chuẩn dữ liệu state board
     const newBoard = cloneDeep(board);
     const columnToUpdate = newBoard.columns.find(
-      (column) => column._id === columnId
+      (column) => column._id === columnId,
     );
     if (columnToUpdate) {
       columnToUpdate.cards = dndOrderedCards;
@@ -70,7 +70,7 @@ function Board() {
     currentCardId,
     prevColumnId,
     nextColumnId,
-    dndOrderedColumns
+    dndOrderedColumns,
   ) => {
     const dndOrderedColumnsIds = dndOrderedColumns.map((c) => c._id);
     // Cập nhật lại state board
@@ -98,21 +98,7 @@ function Board() {
   };
 
   if (!board) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100vh",
-          gap: 2,
-          width: "100vw",
-        }}
-      >
-        <CircularProgress />
-        <Typography>Loading board...</Typography>
-      </Box>
-    );
+    return <PageLoadingSpinner caption="Loading board..." />;
   }
   return (
     <Container disableGutters maxWidth={false} sx={{ height: "100vh" }}>
