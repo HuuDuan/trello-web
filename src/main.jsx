@@ -14,6 +14,9 @@ import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
 const persistor = persistStore(store);
 
+import { injectStore } from "~/utils/authorizeAxios";
+injectStore(store);
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter basename="/">
     <Provider store={store}>
@@ -24,7 +27,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               allowClose: false,
               dialogProps: { maxWidth: "xs" },
               cancellationButtonProps: { color: "error" },
-              confirmationButtonProps: { color: "primary", variant: "outlined" },
+              confirmationButtonProps: {
+                color: "primary",
+                variant: "outlined",
+              },
             }}
           >
             <CssBaseline />
@@ -34,5 +40,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         </CssVarsProvider>
       </PersistGate>
     </Provider>
-  </BrowserRouter>
+  </BrowserRouter>,
 );
