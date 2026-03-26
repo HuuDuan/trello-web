@@ -17,6 +17,14 @@ export const loginUserAPI = createAsyncThunk(
     }
 )
 
+export const updateUserAPI = createAsyncThunk(
+    'user/updateUserAPI',
+    async (data) => {
+        const response = await authorizedAxiosInstance.put(`${API_ROOT}/v1/users/update`, data)
+        return response.data;
+    }
+)
+
 export const logoutUserAPI = createAsyncThunk(
     'user/logoutUserAPI',
     async (showSuccessMessage = true) => {
@@ -42,6 +50,24 @@ export const userSlice = createSlice({
         });
         builder.addCase(logoutUserAPI.fulfilled, (state) => {
             state.currentUser = null
+        });
+        builder.addCase(updateUserAPI.fulfilled, (state, action) => {
+            let updatedUser = action.payload
+            if (!updatedUser || typeof updatedUser !== 'object' || Array.isArray(updatedUser) || Object.keys(updatedUser).length === 0) {
+                // Nếu backend trả {} (hoặc payload không dùng được), dùng request arg làm fallback
+                const fallback = action.meta?.arg || {}
+                updatedUser = fallback
+            }
+
+            if (updatedUser && typeof updatedUser === 'object' && !Array.isArray(updatedUser)) {
+                const userPayload = updatedUser.user || updatedUser
+                state.currentUser = {
+                    ...state.currentUser,
+                    ...userPayload,
+                }
+            } else {
+                console.warn('updateUserAPI.fulfilled: unexpected payload fallback', updatedUser)
+            }
         });
     }
 })
