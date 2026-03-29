@@ -1,4 +1,3 @@
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import ContentCut from "@mui/icons-material/ContentCut";
 import ContentCopy from "@mui/icons-material/ContentCopy";
@@ -23,13 +22,18 @@ import CloseIcon from "@mui/icons-material/Close";
 import { TextField } from "@mui/material";
 import { toast } from "react-toastify";
 import { useConfirm } from "material-ui-confirm";
-import { createNewCardAPI, deleteColumnDetailsAPI } from "~/apis";
+import {
+  createNewCardAPI,
+  deleteColumnDetailsAPI,
+  updateColumnDetailsAPI,
+} from "~/apis";
 import {
   updateCurrentActiveBoard,
   selectCurrentActiveBoard,
 } from "~/redux/activeBoard/activeBoardSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { cloneDeep } from "lodash";
+import ToggleFocusInput from "~/components/Form/ToggleFocusInput";
 
 function Column({ column }) {
   const dispatch = useDispatch();
@@ -77,7 +81,7 @@ function Column({ column }) {
     });
     const newBoard = cloneDeep(board);
     const columnToUpdate = newBoard.columns.find(
-      (column) => column._id === createdCard.columnId
+      (column) => column._id === createdCard.columnId,
     );
 
     if (columnToUpdate) {
@@ -121,7 +125,7 @@ function Column({ column }) {
         const newBoard = { ...board };
         newBoard.columns = newBoard.columns.filter((c) => c._id !== column._id);
         newBoard.columnOrderIds = newBoard.columnOrderIds.filter(
-          (_id) => _id !== column._id
+          (_id) => _id !== column._id,
         );
         dispatch(updateCurrentActiveBoard(newBoard));
 
@@ -131,6 +135,18 @@ function Column({ column }) {
         });
       })
       .catch(() => {});
+  };
+
+  const onUpdateColumnTitle = (newTitle) => {
+    // gọi api update column và xử lý dữ liệu trong redux
+    updateColumnDetailsAPI(column._id, { title: newTitle }).then((res) => {
+      const newBoard = cloneDeep(board);
+      const columnToUpdate = newBoard.columns.find((c) => c._id === column._id);
+      if (columnToUpdate) {
+        columnToUpdate.title = newTitle;
+      }
+      dispatch(updateCurrentActiveBoard(newBoard));
+    });
   };
 
   return (
@@ -159,16 +175,11 @@ function Column({ column }) {
             justifyContent: "space-between",
           }}
         >
-          <Typography
-            variant="h6"
-            sx={{
-              fontSize: "1rem",
-              fontWeight: "bold",
-              cursor: "pointer",
-            }}
-          >
-            {column?.title}
-          </Typography>
+          <ToggleFocusInput
+            value={column?.title}
+            onChangedValue={onUpdateColumnTitle}
+            data-no-dnd="true"
+          />
           <Box>
             <Tooltip title="More Option" placement="top">
               <ExpandMoreIcon
