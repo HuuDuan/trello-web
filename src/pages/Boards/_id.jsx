@@ -5,6 +5,7 @@ import BoardBar from "~/pages/Boards/BoardBar/BoardBar";
 import BoardContent from "~/pages/Boards/BoardContent/BoardContent";
 import PageLoadingSpinner from "~/components/Loading/PageLoadingSpinner";
 // import { mockData } from "~/apis/mock-data";
+import ActiveCard from "~/components/Modal/ActiveCard/ActiveCard";
 import {
   updateBoardDetailsAPI,
   updateColumnDetailsAPI,
@@ -18,11 +19,13 @@ import {
 } from "~/redux/activeBoard/activeBoardSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { selectCurrentActiveCard } from "~/redux/activeCard/activeCardSlice";
 
 function Board() {
   const dispatch = useDispatch();
   // const [board, setBoard] = useState(null);
   const board = useSelector(selectCurrentActiveBoard);
+  const activeCard = useSelector(selectCurrentActiveCard);
 
   const { boardId } = useParams();
 
@@ -102,6 +105,7 @@ function Board() {
   }
   return (
     <Container disableGutters maxWidth={false} sx={{ height: "100vh" }}>
+      {activeCard && <ActiveCard />}
       <AppBar />
       <BoardBar board={board} />
       <BoardContent

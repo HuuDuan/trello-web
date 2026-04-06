@@ -5,13 +5,12 @@ import VpnLockIcon from "@mui/icons-material/VpnLock";
 import AddToDriveIcon from "@mui/icons-material/AddToDrive";
 import BoltIcon from "@mui/icons-material/Bolt";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import Avatar from "@mui/material/Avatar";
-import AvatarGroup from "@mui/material/AvatarGroup";
 import Tooltip from "@mui/material/Tooltip";
 import Button from "@mui/material/Button";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { capitalizeFirstLetter } from "~/utils/formatters";
 import { useHorizontalScroll } from "~/customHooks";
+import BoardUserGroup from "./BoardUserGroup";
 
 const MENU_STYLES = {
   color: "white",
@@ -87,64 +86,7 @@ function BoardBar({ board }) {
         >
           Invite
         </Button>
-        <AvatarGroup
-          max={6}
-          sx={{
-            gap: "10px",
-            "& .MuiAvatar-root": {
-              width: 32,
-              height: 32,
-              fontSize: 15,
-              border: "none",
-              color: "white",
-              cursor: "pointer",
-              "&:first-of-type": { bgcolor: "#a4b0be" },
-            },
-          }}
-        >
-          <Tooltip title="huuduan">
-            <Avatar alt="huuduan" src="https://i.imgur.com/0y0y0y0.jpg" />
-          </Tooltip>
-          <Tooltip title="huuduan">
-            <Avatar
-              alt="huuduan"
-              src="https://randomuser.me/api/portraits/men/32.jpg"
-            />
-          </Tooltip>
-          <Tooltip title="huuduan">
-            <Avatar
-              alt="huuduan"
-              src="https://randomuser.me/api/portraits/men/75.jpg"
-            />
-          </Tooltip>
-          <Tooltip title="huuduan">
-            <Avatar
-              alt="huuduan"
-              src="https://randomuser.me/api/portraits/women/44.jpg"
-            />
-          </Tooltip>
-          <Tooltip title="huuduan">
-            <Avatar alt="huuduan" src="https://i.imgur.com/0y0y0y0.jpg" />
-          </Tooltip>
-          <Tooltip title="huuduan">
-            <Avatar
-              alt="huuduan"
-              src="https://randomuser.me/api/portraits/men/32.jpg"
-            />
-          </Tooltip>
-          <Tooltip title="huuduan">
-            <Avatar
-              alt="huuduan"
-              src="https://randomuser.me/api/portraits/men/75.jpg"
-            />
-          </Tooltip>
-          <Tooltip title="huuduan">
-            <Avatar
-              alt="huuduan"
-              src="https://randomuser.me/api/portraits/women/44.jpg"
-            />
-          </Tooltip>
-        </AvatarGroup>
+        <BoardUserGroup boardUsers={board?.FE_allUsers} />
       </Box>
     </Box>
   );
