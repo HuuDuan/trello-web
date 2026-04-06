@@ -30,11 +30,27 @@ export const activeBoardSlice = createSlice({
 
         state.currentActiveBoard = board
     },
+    updateCardInBoard: (state, action) => {
+        const incomingCard = action.payload
+        const column = state.currentActiveBoard.columns.find(i => i._id === incomingCard.columnId)
+        if (column) {
+            const card = column.cards.find(i => i._id === incomingCard._id)
+            if (card) {
+                // card.title = incomingCard.title
+                Object.keys(incomingCard).forEach(key => {
+                    card[key] = incomingCard[key]
+                })
+            }
+        }
+    }
   },
     // ExtraReducers: Nơi xử lý dữ liệu bất đồng bộ (Async)
     extraReducers: (builder) => {
         builder.addCase(fetchBoardDetailsAPI.fulfilled, (state, action) => {
             let board = action.payload
+
+            // Thành viên trong cái board sẽ là gộp lại của 2 mảng owners và members
+            board.FE_allUsers = board.owners.concat(board.members);
             board.columns = mapOrder(board.columns, board.columnOrderIds, "_id");
             
             board.columns.forEach((column) => {
@@ -53,7 +69,7 @@ export const activeBoardSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { updateCurrentActiveBoard } = activeBoardSlice.actions
+export const { updateCurrentActiveBoard, updateCardInBoard } = activeBoardSlice.actions
 
 export const selectCurrentActiveBoard = (state) => state.activeBoard.currentActiveBoard;
 
