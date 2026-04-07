@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
@@ -34,9 +33,10 @@ import CardDescriptionMdEditor from "./CardDescriptionMdEditor";
 import CardActivitySection from "./CardActivitySection";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  clearCurrentActiveCard,
+  clearAndHideCurrentActiveCard,
   updateCurrentActiveCard,
   selectCurrentActiveCard,
+  selectIsShowModalActiveCard,
 } from "~/redux/activeCard/activeCardSlice";
 import { styled } from "@mui/material/styles";
 import { updateCardDetailsAPI } from "~/apis";
@@ -71,12 +71,13 @@ const SidebarItem = styled(Box)(({ theme }) => ({
 function ActiveCard() {
   const dispatch = useDispatch();
   const activeCard = useSelector(selectCurrentActiveCard);
+  const isShowModalActiveCard = useSelector(selectIsShowModalActiveCard);
   // const [isOpen, setIsOpen] = useState(true);
   // const handleOpenModal = () => setIsOpen(true);
 
   const handleCloseModal = () => {
     // setIsOpen(false);
-    dispatch(clearCurrentActiveCard());
+    dispatch(clearAndHideCurrentActiveCard());
   };
 
   // function gọi api dùng chung cho các trường hợp update card
@@ -114,10 +115,14 @@ function ActiveCard() {
     );
   };
 
+  const onAddCardComment = async (commentToAdd) => {
+    await callApiUpdateCard({ commentToAdd });
+  };
+
   return (
     <Modal
       disableScrollLock
-      open={true}
+      open={isShowModalActiveCard}
       onClose={handleCloseModal} // Sử dụng onClose trong trường hợp muốn đóng Modal bằng nút ESC hoặc click ra ngoài Modal
       sx={{ overflowY: "auto" }}
     >
@@ -231,7 +236,10 @@ function ActiveCard() {
               </Box>
 
               {/* Feature 04: Xử lý các hành động, ví dụ comment vào Card */}
-              <CardActivitySection />
+              <CardActivitySection
+                cardComments={activeCard?.comments}
+                onClickAddCardComment={onAddCardComment}
+              />
             </Box>
           </Grid>
 
