@@ -55,7 +55,7 @@ export const notificationsSlice = createSlice({
     }
 })
 
-export const { clearCurrentNotifications, updateCurrentNotifications, addNotification } = notificationsSlice.actions;
+export const { clearCurrentNotifications, updateCurrentNotifications, addNotification, } = notificationsSlice.actions;
 
 export const selectCurrentNotifications = (state) => state.notifications.currentNotifications;
 
