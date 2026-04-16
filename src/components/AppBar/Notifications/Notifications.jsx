@@ -21,9 +21,8 @@ import {
   addNotification,
 } from "~/redux/notifications/notificationsSlice";
 
-import { socketIoInstance } from "~/main.jsx";
+import { socketIoInstance } from "~/socketClient";
 import { selectCurrentUser } from "~/redux/user/userSlice";
-import { Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const BOARD_INVITATION_STATUS = {
