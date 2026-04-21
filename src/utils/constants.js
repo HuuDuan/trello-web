@@ -1,8 +1,8 @@
 let apiRoot = ''
-if (process.env.BUILD_MODE === 'dev') {
+if (import.meta.env.MODE === 'development') {
     apiRoot = 'http://localhost:8017'
 }
-if (process.env.BUILD_MODE === 'production') {
+if (import.meta.env.MODE === 'production') {
     apiRoot = 'https://trello-api-revk.onrender.com'
 }
 export const API_ROOT = apiRoot
