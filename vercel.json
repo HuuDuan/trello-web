@@ -22,11 +22,7 @@
   ],
   "rewrites": [
     {
-      "source": "/:path*\\..*",
-      "destination": "/:path*"
-    },
-    {
-      "source": "/.*",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
